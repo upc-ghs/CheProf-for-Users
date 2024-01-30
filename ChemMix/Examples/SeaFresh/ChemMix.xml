@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<ChemMix EndM1="Seawater Calcite"
+         EndM2="Fresh water"
+         IniChem="Seawater Calcite"
+         nMix="11"
+         FileChemSys="SeaFresh. ChemSys1.xml"
+         FileLocalChem="SeaFresh. LocalChem1.xml"/>

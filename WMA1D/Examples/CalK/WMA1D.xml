@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WMA1D Flux="6.342e-8"
+       Por="0.1"
+       PeInv="0.4"
+       Length="100.0"
+       NCell="20"
+       ChemIni="InitialWater"
+       ChemBou="BoundaryWater"
+       FileChemSys="CalK. ChemSys.xml"
+       FileLocalChem="CalE. LocalChem.xml"
+       NOutputTime="5"/>

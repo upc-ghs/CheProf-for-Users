@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<ChemMix EndM1="EndM1"
+         EndM2="EndM2"
+         IniChem="EndM2"
+         nMix="11"
+         FileChemSys="Gypsum. ChemSys.xml"
+         FileLocalChem="Gypsum. LocalChem.xml"/>

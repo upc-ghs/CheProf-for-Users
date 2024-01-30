@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<DSA1D FileChemSys="CalK. ChemSys.xml" FileLocalChem="CalE. LocalChem.xml">
+	<ZoneS>
+		<Zone Length="100" nElem="20" Dis="10.0" ChemIni="InitialWater"/>
+	</ZoneS>
+	<PeriodS>
+		<Period Time="7.90e7" dTime="3.16e6" Flux="6.342e-8" ChemLeft="BoundaryWater"/>
+		<Period Time="7.90e7" dTime="3.16e6" Flux="6.342e-8" ChemLeft="BoundaryWater"/>
+	</PeriodS>
+	<Numerics TolVar="1.0e-5" MaxIter="20"/>
+</DSA1D>

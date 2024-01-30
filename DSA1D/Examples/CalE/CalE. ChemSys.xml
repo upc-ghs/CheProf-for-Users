@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ChemSys Name="Chemical system">
+	<PhaseS>
+		<Phase Name="Aqueous" Mob="Liq">
+			<PhaseModel Type="Aqueous_DH" Dens="1000.00000"/>
+			<!-- <Species Name="H2O" MolMass="0.0180152" Charge="0.0" IonSize="3.0" b_TJ="0.100"/> -->
+			<Species Name="Ca+2" MolMass="0.0400780" Charge="2.0" IonSize="5.0" b_TJ="0.165"/>
+			<Species Name="HCO3-" MolMass="0.0610168" Charge="-1.0" IonSize="5.4" b_TJ="0.000"/>
+			<Species Name="H+" MolMass="0.0010079" Charge="1.0" IonSize="9.0" b_TJ="0.000"/>
+			<Species Name="CaHCO3+" MolMass="0.1010948" Charge="1.0" IonSize="6.0" b_TJ="0.000"/>
+			<Species Name="CO3-2" MolMass="0.0600089" Charge="-2.0" IonSize="5.4" b_TJ="0.000"/>
+			<Species Name="CO2" MolMass="0.0440095" Charge="0.0" IonSize="3.0" b_TJ="0.100"/>
+			<Species Name="OH-" MolMass="0.0170073" Charge="-1.0" IonSize="3.5" b_TJ="0.000"/>
+		</Phase>
+		<Phase Name="Calcite" Mob="Imm">
+			<PhaseModel Type="Mineral" MolVol="0.36900E-04"/>
+			<Species Name="CaCO3(s)" MolMass="0.1000869" Charge="0.0" IonSize="0.0" b_TJ="0.000"/>
+		</Phase>
+	</PhaseS>
+	<ReactionS>
+		<Reaction Name="H2O = OH- + H+" Form=" = H+ + OH-" LogK="-13.995" Kin="No"/>
+		<Reaction Name="CO3-2 + H+ = HCO3-" Form="H+ + CO3-2 = HCO3-" LogK="10.329" Kin="No"/>
+		<Reaction Name="CO3-2 + 2 H+ = CO2 + H2O" Form="2H+ + CO3-2 = CO2" LogK="16.681" Kin="No"/>
+		<Reaction Name="Ca+2 + CO3-2 + H+ = CaHCO3+" Form="Ca+2 + H+ + CO3-2 = CaHCO3+" LogK="11.435" Kin="No"/>
+		<Reaction Name="Calcite dissolution" Form="CaCO3(s) = Ca+2 + CO3-2" LogK="-8.480" Kin="No"/>
+	</ReactionS>
+	<ComponentS Method="Manual">
+		<!-- <Component Name="H2O" Type="Het" Form="H2O"/> -->
+		<Component Name="Ca" Type="Het" Form="Ca+2 + CaHCO3+ + CaCO3(s)"/>
+		<Component Name="C" Type="Het" Form="HCO3- + CaHCO3+ + CO3-2 + CO2 + CaCO3(s)"/>
+		<Component Name="H" Type="Het" Form="H+ - CO3-2 + CO2 - OH- - CaCO3(s)"/>
+	</ComponentS>
+	<Numerics Method="NR" Speciation="FromComAqu" Tol="0.10E-05" MaxIter="20" MaxFac="0.10E+04" UseLn="Yes"/>
+	<Output File="CalE. Chem.txt">
+		<Acti Species="H+; CaCO3(s)"/>
+		<Comp Components="Ca; C"/>
+		<VolF Phases="Calcite"/>
+	</Output>
+</ChemSys>

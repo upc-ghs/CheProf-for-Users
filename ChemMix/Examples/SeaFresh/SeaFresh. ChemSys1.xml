@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<ChemSys Name="Chemical system">
+ 
+   <PhaseS>
+      <Phase Name="Aqueous" Mob="Liq">
+         <PhaseModel Type="Aqueous_DH" Dens="1000.00000"/>
+         <Species Name="H+" MolMass="0.0010079" Charge="1.0" IonSize="9.0" b_TJ="0.000"/>
+         <Species Name="OH-" MolMass="0.0170073" Charge="-1.0" IonSize="3.5" b_TJ="0.000"/>
+         <Species Name="HCO3-" MolMass="0.0610168" Charge="-1.0" IonSize="5.4" b_TJ="0.000"/>
+         <Species Name="CO3-2" MolMass="0.0600089" Charge="-2.0" IonSize="5.4" b_TJ="0.000"/>
+         <Species Name="CO2" MolMass="0.0440095" Charge="0.0" IonSize="3.0" b_TJ="0.100"/>
+         <Species Name="Ca+2" MolMass="0.0400780" Charge="2.0" IonSize="5.0" b_TJ="0.165"/>
+         <Species Name="Na+" MolMass="0.0229897" Charge="1.0" IonSize="4.1" b_TJ="0.082"/>
+         <Species Name="Cl-" MolMass="0.0354530" Charge="-1.0" IonSize="3.6" b_TJ="0.017"/>
+         <Species Name="K+" MolMass="0.0390983" Charge="1.0" IonSize="3.5" b_TJ="0.015"/>
+         <Species Name="Mg+2" MolMass="0.0243050" Charge="2.0" IonSize="5.5" b_TJ="0.200"/>
+         <Species Name="SO4-2" MolMass="0.0960626" Charge="-2.0" IonSize="5.0" b_TJ="-0.040"/>
+         <Species Name="MgHCO3+" MolMass="0.0853218" Charge="1.0" IonSize="4.0" b_TJ="0.000"/>
+         <Species Name="NaHCO3" MolMass="0.0840065" Charge="0.0" IonSize="3.0" b_TJ="0.100"/>
+         <Species Name="CaHCO3+" MolMass="0.1010948" Charge="1.0" IonSize="6.0" b_TJ="0.000"/>
+         <Species Name="MgCO3" MolMass="0.0843139" Charge="0.0" IonSize="3.0" b_TJ="0.100"/>
+         <Species Name="NaCO3-" MolMass="0.0829986" Charge="-1.0" IonSize="3.0" b_TJ="0.153"/>
+         <Species Name="CaCO3" MolMass="0.1000869" Charge="0.0" IonSize="3.0" b_TJ="0.100"/>
+         <Species Name="MgSO4" MolMass="0.1203676" Charge="0.0" IonSize="3.0" b_TJ="0.100"/>
+         <Species Name="NaSO4-" MolMass="0.1190523" Charge="-1.0" IonSize="5.4" b_TJ="0.000"/>
+         <Species Name="CaSO4" MolMass="0.1361406" Charge="0.0" IonSize="3.0" b_TJ="0.100"/>
+      </Phase>
+      <Phase Name="Gas" Mob="Gas">
+         <PhaseModel Type="Gas" PresRef="0.10000E+01"/>
+         <Species Name="CO2(g)" MolMass="0.0440095" Charge="0.0"/>
+      </Phase>
+      <Phase Name="Calcite" Mob="Imm">
+         <PhaseModel Type="Mineral" MolVol="0.36900E-04"/>
+         <Species Name="CaCO3(s)" MolMass="0.1000869" Charge="0.0"/>
+      </Phase>
+   </PhaseS>
+ 
+   <ReactionS>
+      <Reaction Name="OH- formation" Form="= H+ + OH-" LogK="-13.995" Kin="No"/>
+      <Reaction Name="HCO3- formation" Form="H+ + CO3-2 = HCO3-" LogK="10.329" Kin="No"/>
+      <Reaction Name="CO2 formation" Form="2H+ + CO3-2 = CO2" LogK="16.681" Kin="No"/>
+      <Reaction Name="CaCO3 formation" Form="CO3-2 + Ca+2 = CaCO3" LogK="3.225" Kin="No"/>
+      <Reaction Name="CaHCO3+ formation" Form="H+ + CO3-2 + Ca+2 = CaHCO3+" LogK="11.435" Kin="No"/>
+      <Reaction Name="CaSO4 formation" Form="Ca+2 + SO4-2 = CaSO4" LogK="2.250" Kin="No"/>
+      <Reaction Name="MgCO3 formation" Form="CO3-2 + Mg+2 = MgCO3" LogK="2.980" Kin="No"/>
+      <Reaction Name="MgHCO3+ formation" Form="H+ + CO3-2 + Mg+2 = MgHCO3+" LogK="11.397" Kin="No"/>
+      <Reaction Name="MgSO4 formation" Form="Mg+2 + SO4-2 = MgSO4" LogK="2.370" Kin="No"/>
+      <Reaction Name="NaCO3- formation" Form="CO3-2 + Na+ = NaCO3-" LogK="1.270" Kin="No"/>
+      <Reaction Name="NaHCO3 formation" Form="HCO3- + Na+ = NaHCO3" LogK="-0.250" Kin="No"/>
+      <Reaction Name="NaSO4- formation" Form="Na+ + SO4-2 = NaSO4-" LogK="0.700" Kin="No"/>
+      <Reaction Name="Calcite dissolution" Form="CaCO3(s) = CO3-2 + Ca+2" LogK="-8.480" Kin="No"/>
+      <Reaction Name="CO2(g) dissolution" Form="CO2(g) = CO2" LogK="-1.468" Kin="No"/>
+   </ReactionS>
+ 
+   <ComponentS Method="Manual">
+      <Component Name="HCO3-" Type="Het" Form="HCO3- + CO3-2 + CO2 + MgHCO3+ + NaHCO3 + CaHCO3+ + MgCO3 + NaCO3- + CaCO3 + CO2(g) + CaCO3(s)"/>
+      <Component Name="Ca+2" Type="Het" Form="Ca+2 + CaHCO3+ + CaCO3 + CaSO4 + CaCO3(s)"/>
+      <Component Name="H+" Type="HolC" Form="H+ - OH- - HCO3- - 2CO3-2 + 2Ca+2 - MgHCO3+ - NaHCO3 + CaHCO3+ - 2MgCO3 - 2NaCO3- + 2CaSO4"/>
+      <Component Name="Na+" Type="HolC" Form="Na+ + NaHCO3 + NaCO3- + NaSO4-"/>
+      <Component Name="Cl-" Type="HolC" Form="Cl-"/>
+      <Component Name="K+" Type="HolC" Form="K+"/>
+      <Component Name="Mg+2" Type="HolC" Form="Mg+2 + MgHCO3+ + MgCO3 + MgSO4"/>
+      <Component Name="SO4-2" Type="HolC" Form="SO4-2 + MgSO4 + NaSO4- + CaSO4"/>
+   </ComponentS>
+ 
+   <!-- <Numerics Method="NR" Speciation="FromComAqu" Tol="0.10E-05" MaxIter="20" MaxFac="0.10E+04" UseLn="Yes" TimeWeight="1.00"/> -->
+   <Numerics Method="NR" Speciation="FromComAqu" Tol="0.10E-05" MaxIter="100" MaxFac="0.10E+04" UseLn="Yes" TimeWeight="1.00"/>
+ 
+   <Output File="SeaFresh. Chem.txt">
+      <Acti Species="H+; CO2(g); CaCO3(s)"/>
+      <Comp Components="Ca+2; HCO3-; Cl-"/>
+      <VolF Phases="Aqueous; Calcite"/>
+   </Output>
+ 
+</ChemSys>

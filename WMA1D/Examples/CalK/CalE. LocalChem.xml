@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<LocalChemS>
+ 
+   <LocalChem Name="InitialWater" Temp="25.00000">
+      <Phase Name="Aqueous" VolF="0.1">
+         <!-- <Species Name="H2O" Conc="0.55510E+02"/> -->
+         <Species Name="Ca+2" Conc="0.96030E-03"/>
+         <Species Name="HCO3-" Conc="0.95920E-03"/>
+         <Species Name="H+" Conc="0.10520E-07"/>
+         <Species Name="CaHCO3+" Conc="0.94960E-05"/>
+         <Species Name="CO3-2" Conc="0.52750E-05"/>
+         <Species Name="CO2" Conc="0.20440E-04"/>
+         <Species Name="OH-" Conc="0.10690E-05"/>
+      </Phase>
+      <Phase Name="Calcite" VolF="0.50000E-04">
+         <Species Name="CaCO3(s)" Conc="0.10000E+01"/>
+      </Phase>
+   </LocalChem>
+ 
+   <LocalChem Name="BoundaryWater" Temp="25.00000">
+      <Phase Name="Aqueous" VolF="0.10030E-02">
+         <!-- <Species Name="H2O" Conc="0.55510E+02"/> -->
+         <Species Name="Ca+2" Conc="0.40000E-04"/>
+         <Species Name="HCO3-" Conc="0.37330E-05"/>
+         <Species Name="H+" Conc="0.31950E-05"/>
+         <Species Name="CaHCO3+" Conc="0.18260E-08"/>
+         <Species Name="CO3-2" Conc="0.57150E-10"/>
+         <Species Name="CO2" Conc="0.26260E-04"/>
+         <Species Name="OH-" Conc="0.32350E-08"/>
+      </Phase>
+      <Phase Name="Calcite" VolF="0.00000E+00">
+         <Species Name="CaCO3(s)" Conc="0.63096E-06"/>
+      </Phase>
+   </LocalChem>
+ 
+</LocalChemS>

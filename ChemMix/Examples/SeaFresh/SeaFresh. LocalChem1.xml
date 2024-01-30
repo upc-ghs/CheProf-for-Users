@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<LocalChemS>
+ 
+   <LocalChem Name="Seawater Calcite" Temp="25.00000">
+      <Phase Name="Aqueous" VolF="0.10125E-02">
+         <Species Name="H+" Conc="0.40080E-07"/>
+         <Species Name="OH-" Conc="0.53620E-06"/>
+         <Species Name="HCO3-" Conc="0.13770E-02"/>
+         <Species Name="CO3-2" Conc="0.68710E-05"/>
+         <Species Name="CO2" Conc="0.55690E-04"/>
+         <Species Name="Ca+2" Conc="0.91450E-02"/>
+         <Species Name="Na+" Conc="0.46330E+00"/>
+         <Species Name="Cl-" Conc="0.54760E+00"/>
+         <Species Name="K+" Conc="0.10070E-01"/>
+         <Species Name="Mg+2" Conc="0.46130E-01"/>
+         <Species Name="SO4-2" Conc="0.13980E-01"/>
+         <Species Name="MgHCO3+" Conc="0.23030E-03"/>
+         <Species Name="NaHCO3" Conc="0.15000E-03"/>
+         <Species Name="CaHCO3+" Conc="0.39350E-04"/>
+         <Species Name="MgCO3" Conc="0.15790E-04"/>
+         <Species Name="NaCO3-" Conc="0.12000E-04"/>
+         <Species Name="CaCO3" Conc="0.47860E-05"/>
+         <Species Name="MgSO4" Conc="0.69220E-02"/>
+         <Species Name="NaSO4-" Conc="0.63400E-02"/>
+         <Species Name="CaSO4" Conc="0.90440E-03"/>
+      </Phase>
+      <Phase Name="Gas" VolF="0.00000E+00">
+         <Species Name="CO2(g)" Conc="0.19055E-02"/>
+      </Phase>
+      <Phase Name="Calcite" VolF="0.36900E-03">
+         <Species Name="CaCO3(s)" Conc="0.10000E+01"/>
+      </Phase>
+   </LocalChem>
+ 
+   <LocalChem Name="Fresh water" Temp="25.00000">
+      <Phase Name="Aqueous" VolF="0.10030E-02">
+         <Species Name="H+" Conc="0.63750E-08"/>
+         <Species Name="OH-" Conc="0.17310E-05"/>
+         <Species Name="HCO3-" Conc="0.10290E-02"/>
+         <Species Name="CO3-2" Conc="0.90000E-05"/>
+         <Species Name="CO2" Conc="0.13540E-04"/>
+         <Species Name="Ca+2" Conc="0.52170E-03"/>
+         <Species Name="Na+" Conc="0.10000E-09"/>
+         <Species Name="Cl-" Conc="0.10000E-09"/>
+         <Species Name="K+" Conc="0.10000E-09"/>
+         <Species Name="Mg+2" Conc="0.10000E-09"/>
+         <Species Name="SO4-2" Conc="0.10000E-09"/>
+         <Species Name="MgHCO3+" Conc="0.10000E-09"/>
+         <Species Name="NaHCO3" Conc="0.10000E-09"/>
+         <Species Name="CaHCO3+" Conc="0.57520E-05"/>
+         <Species Name="MgCO3" Conc="0.10000E-09"/>
+         <Species Name="NaCO3-" Conc="0.10000E-09"/>
+         <Species Name="CaCO3" Conc="0.55610E-05"/>
+         <Species Name="MgSO4" Conc="0.10000E-09"/>
+         <Species Name="NaSO4-" Conc="0.10000E-09"/>
+         <Species Name="CaSO4" Conc="0.10000E-09"/>
+      </Phase>
+      <Phase Name="Gas" VolF="0.00000E+00">
+         <Species Name="CO2(g)" Conc="0.39811E-03"/>
+      </Phase>
+      <Phase Name="Calcite" VolF="0.00000E+00">
+         <Species Name="CaCO3(s)" Conc="0.10000E+01"/>
+      </Phase>
+   </LocalChem>
+ 
+</LocalChemS>

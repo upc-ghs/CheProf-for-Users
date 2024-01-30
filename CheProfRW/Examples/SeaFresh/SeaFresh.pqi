@@ -1,0 +1,103 @@
+DATABASE C:\Program Files (x86)\USGS\Phreeqc Interactive 3.7.3-15968\database\phreeqc.dat
+SELECTED_OUTPUT 1
+    -file                 SeaFresh.out
+    -totals               C  Ca  Cl
+    -saturation_indices   Calcite  CO2(g)
+
+SOLUTION 1 Seawater
+    temp      25
+    pH        8.22
+    pe        4 O2(g) -3.592
+    redox     pe
+    units     mg/l
+    density   1.032
+    Alkalinity 141.682 as HCO3-
+    Ca        412.3
+    Cl        19353
+    K         399.1
+    Mg        1291.8
+    Na        10768
+    S         2712
+    -water    1 # kg
+
+EQUILIBRIUM_PHASES 1 Calcite equilibrium
+    Calcite   0 10
+
+SAVE solution 3
+
+END
+
+SOLUTION 2 Fresh water
+    temp      25
+    pH        7 charge
+    pe        4
+    redox     pe
+    units     mol/kgw
+    density   1
+    C         1e-005 CO2(g)     -3.4
+    Ca        1e-005 Calcite    0
+    -water    1 # kg
+END
+
+EQUILIBRIUM_PHASES 4
+    Calcite   0 10
+MIX 1
+    2    0.9
+    3    0.1
+END
+
+EQUILIBRIUM_PHASES 4
+    Calcite   0 10
+MIX 1
+    2    0.8
+    3    0.2
+END
+
+EQUILIBRIUM_PHASES 4
+    Calcite   0 10
+MIX 1
+    2    0.7
+    3    0.3
+END
+
+EQUILIBRIUM_PHASES 4
+    Calcite   0 10
+MIX 1
+    2    0.6
+    3    0.4
+END
+
+EQUILIBRIUM_PHASES 4
+    Calcite   0 10
+MIX 1
+    2    0.5
+    3    0.5
+END
+
+EQUILIBRIUM_PHASES 4
+    Calcite   0 10
+MIX 1
+    2    0.4
+    3    0.6
+END
+
+EQUILIBRIUM_PHASES 4
+    Calcite   0 10
+MIX 1
+    2    0.3
+    3    0.7
+END
+
+EQUILIBRIUM_PHASES 4
+    Calcite   0 10
+MIX 1
+    2    0.2
+    3    0.8
+END
+
+EQUILIBRIUM_PHASES 4
+    Calcite   0 10
+MIX 1
+    2    0.1
+    3    0.9
+END

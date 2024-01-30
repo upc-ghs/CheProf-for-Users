@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<CheProfReadWrite FileChemSysIn="SeaFresh. ChemSys0.xml"
+                  FileChemSysOut="SeaFresh. ChemSys1.xml"
+                  FileLocalChemIn="SeaFresh. LocalChem0.xml"
+                  FileLocalChemOut="SeaFresh. LocalChem1.xml"/>

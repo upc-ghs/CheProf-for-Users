@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ChemSys>
+  <PhaseS>
+    <Phase Name="Aqueous">
+      <PhaseModel Type="Aqueous" />
+      <Species Name="Ca+2" />
+      <Species Name="SO4-2" />
+    </Phase>
+    <Phase Name="Gypsum" />
+  </PhaseS>
+  <ReactionS>
+    <Reaction Name="Dissolution" Form="Gypsum = Ca+2 + SO4-2" LogK="-4.6" />
+  </ReactionS>
+  <ComponentS Method="Manual">
+    <Component Name="Ca-SO4" Form="Ca+2 - SO4-2" />
+    <Component Name="Ca" Form="Ca+2 + Gypsum" />
+  </ComponentS>
+  <Numerics Method="NR" Speciation="FromComAqu" Tol="0.10E-05" MaxIter="20" UseLn="Yes" />
+  <Output>
+    <Conc Species="Ca+2; SO4-2; Gypsum" />
+    <Comp Components="Ca-SO4; Ca" />
+    <SatI Reactions="Dissolution" />
+    <VolF Phases="Gypsum" />
+  </Output>
+</ChemSys>

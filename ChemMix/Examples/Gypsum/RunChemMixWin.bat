@@ -1,0 +1,2 @@
+"..\..\Executables\ChemMixWin.exe"
+pause

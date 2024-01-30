@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<ChemSys PhreeqcFile="SeaFresh.pqo">
+	<PhaseS>
+		<Phase Name="Aqueous">
+			<PhaseModel Type="Aqueous_DH"/>
+			<Species Name="H+"/>
+			<Species Name="OH-"/>
+			<Species Name="HCO3-"/>
+			<Species Name="CO3-2"/>
+			<Species Name="CO2"/>
+			<Species Name="Ca+2"/>
+			<Species Name="Na+"/>
+			<Species Name="Cl-"/>
+			<Species Name="K+"/>
+			<Species Name="Mg+2"/>
+			<Species Name="SO4-2"/>
+			<Species Name="MgHCO3+"/>
+			<Species Name="NaHCO3"/>
+			<Species Name="CaHCO3+"/>
+			<Species Name="MgCO3"/>
+			<Species Name="NaCO3-"/>
+			<Species Name="CaCO3"/>
+			<Species Name="MgSO4"/>
+			<Species Name="NaSO4-"/>
+			<Species Name="CaSO4"/>
+		</Phase>
+		<Phase Name="Calcite">
+			<Species Name="CaCO3(s)"/>
+		</Phase>
+		<Phase Name="Gas">
+			<Species Name="CO2(g)"/>
+		</Phase>
+	</PhaseS>
+	<ComponentS Method="Rref">
+	</ComponentS>
+	<Output>
+		<Acti Species="H+; CO2(g); CaCO3(s)"/>
+		<VolF Phases="Aqueous; Calcite"/>
+	</Output>
+</ChemSys>

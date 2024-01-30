@@ -1,0 +1,969 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema"> -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<!-- Types -->
+	<xs:simpleType name="PositiveFloat">
+		<xs:restriction base="xs:float">
+			<xs:minExclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="NonNegativeFloat">
+		<xs:restriction base="xs:float">
+			<xs:minInclusive value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Float0to1">
+		<xs:restriction base="xs:float">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="string80">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="80"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="string200">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="200"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="YesNo_t">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Yes"/>
+			<xs:enumeration value="No"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Mob_t">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Liq"/>
+			<xs:enumeration value="Gas"/>
+			<xs:enumeration value="Imm"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PhaseModel_t">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Aqueous"/>
+			<xs:enumeration value="Aqueous_DH"/>
+			<xs:enumeration value="Gas"/>
+			<xs:enumeration value="Mineral"/>
+			<xs:enumeration value="Mineral_Ubiq"/>
+			<xs:enumeration value="Exchange"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="RateLaw_t">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Lasaga"/>
+			<xs:enumeration value="Monod"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Fact_t">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Lin"/>
+			<xs:enumeration value="Cat"/>
+			<xs:enumeration value="Inh"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="CompS_t">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Manual"/>
+			<xs:enumeration value="Rref"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Comp_t">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Het"/>
+			<xs:enumeration value="HolC"/>
+			<xs:enumeration value="Hoi"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="NumMeth_t">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="NR"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="NumSpec_t">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="FromPrim"/>
+			<xs:enumeration value="FromComAqu"/>
+			<xs:enumeration value="FromComAquKin"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- ChemSys -->
+	<xs:element name="ChemSys">
+		<xs:annotation>
+			<xs:documentation>Chemical System
+			It obligatorily contains one set of phases. 
+			Optionally contains one set of reactions.
+			Obligatorily contains one set of components.
+			Obligatorily contains numerical options and parameters. 
+			Optionally contains output options for chemistry.			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType mixed="true">
+			<xs:sequence>
+				<!--PhaseS-->
+				<xs:element minOccurs="1" maxOccurs="1" name="PhaseS">
+					<xs:annotation>
+						<xs:documentation>Set of Phases</xs:documentation>
+					</xs:annotation>
+					<xs:complexType mixed="true">
+						<xs:sequence>
+							<!--Phase-->
+							<xs:element minOccurs="1" maxOccurs="unbounded" name="Phase">
+								<xs:annotation>
+									<xs:documentation>In thermodynamics, a phase is a portion of the medium with properties such as chemical composition, density, which are different from other phases.
+									It optionally contains one PhaseModel. If no PhaseModel is specified, a default model is used. 
+									Optionally contains one or more species. If no species are specified, the phase consists of one species with its name equal to the name of the phase and with all other attributes equal to default values.									</xs:documentation>
+								</xs:annotation>
+								<xs:complexType mixed="true">
+									<xs:sequence>
+										<!--PhaseModel-->
+										<xs:element minOccurs="0" maxOccurs="1" name="PhaseModel">
+											<xs:annotation>
+												<xs:documentation>The model or equations of state for calculating activities, molalities, etc.</xs:documentation>
+											</xs:annotation>
+											<xs:complexType mixed="true">
+												<xs:attribute name="Type" type="PhaseModel_t">
+													<xs:annotation>
+														<xs:documentation>Optional attribute Type: Type of phase model. It can be: 
+														- Aqueous: Concentrations are molality (mol/kg water). Ideal activities. Activity of water is 1.0. The constraint of the phase is that the molality of water = (MolMass of water)−1. 
+														- Aqueous_DH: Same as Aqueous, but activities are calculated with Debye Hückel (equation (5)).
+														- Gas: Concentrations are partial pressure (bar). Ideal activities. The constraint of the phase is that the sum of partial pressures equals the gas pressure/PresRef.
+														- Mineral: Concentrations are molar fraction. Ideal activities. The constraint of the phase is a complementarity function: Min((1 − Sum of mol fractions),VolF) = 0.
+														- Mineral_Ubiq: Same as Mineral, but the mineral is assumed ubiquitous. The constraint of the phase is: 1 − Sum of mol fractions = 0. This type must be used for minerals that precipitate or dissolve kinetically.
+														- Exchange: Concentrations are equivalent fraction. Ideal activities. The constraint of the phase is that the sum of equivalent fraction equals 1.0.
+														Default type is Aqueous if the phase is named Aqueous, Gas if the phase is named Gas, Exchange if the phase is named Exchange and Mineral otherwise.														</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="Dens" type="PositiveFloat" default="1000.0">
+													<xs:annotation>
+														<xs:documentation>Optional attribute Dens (only for Type = Aqueous or Aqueous_DH): Density of water (kgwater/m3phase). Default is 1000 kg/m3.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="Water" type="string80">
+													<xs:annotation>
+														<xs:documentation>Optional attribute Water (only for Type = Aqueous or Aqueous_DH): Name of the species that represents water. Default is H2O, if H2O is given in the set of species, and none if H2O is not given in the set of species.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="PresRef" type="xs:float" default="1.0">
+													<xs:annotation>
+														<xs:documentation>Optional attribute PresRef: Only for Type = gas. Reference pressure (bar). Default is 1.0 bar.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="MolVol" type="PositiveFloat">
+													<xs:annotation>
+														<xs:documentation>Optional attribute MolVol: Only for Type = Mineral. Molar volume of the phase (m3/mol). Default is 1.0 m3/mol.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+											</xs:complexType>
+										</xs:element>
+										<!--Species-->
+										<xs:element minOccurs="0" maxOccurs="unbounded" name="Species">
+											<xs:annotation>
+												<xs:documentation>We define a chemical species as any chemical entity distinguishable from other species due to: 1) its chemical composition, and 2) by the phase at which it is present.</xs:documentation>
+											</xs:annotation>
+											<xs:complexType mixed="true">
+												<xs:attribute name="Name" type="xs:string" use="required">
+													<xs:annotation>
+														<xs:documentation>Obligatory attribute Name: Name of the species. Two species cannot have the same name, even if they belong to different phases.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="MolMass" type="NonNegativeFloat">
+													<xs:annotation>
+														<xs:documentation>Optional attribute MolMass: Molecular mass (kg/mol). Default is deduced from atomic masses of the chemical elements (with proper upper- and lower-case letters) in the name of the species (e.g. "CaSO4:2H2O" gives 0.172171 kg/mol and "Fe(OH)3(s)" gives 0.1068669 kg/mol).</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="Charge" type="xs:float">
+													<xs:annotation>
+														<xs:documentation>Optional attribute Charge: Ion charge. Default is deduced from the name of the species (e.g., "Na+" gives +1.0 and "CO3-2" gives −2.0).</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="IonSize" type="NonNegativeFloat">
+													<xs:annotation>
+														<xs:documentation>Optional attribute IonSize: Ion size for DH (Debye Hückel) activity model (see 3.2.1.1.1. Phase Model and equation (5)). Default is 0.0.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="b_TJ" type="xs:float">
+													<xs:annotation>
+														<xs:documentation>Optional attribute b_TJ: Truesdell-Jones parameter b for DH (Debye Hückel) activity model (see 3.2.1.1.1. Phase Model and equation (5)). Default is 0.0.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="Fict" type="YesNo_t" default="No">
+													<xs:annotation>
+														<xs:documentation>Optional attribute Fict: Fictitious species are species that are used in mass action laws, but of which the actual concentrations are zero or negligible and should not be considered in mass balances of components. Typical examples of fictitious species are "e-" in aqueous phases and "X-" in ion exchange phases. Fict can be:
+														- No: The species is not a fictitious species.
+														- Yes: The species is a fictitious species.
+														Default value is "No".</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+											</xs:complexType>
+										</xs:element>
+										<!--Phase-->
+									</xs:sequence>
+									<xs:attribute name="Name" type="string80" use="required">
+										<xs:annotation>
+											<xs:documentation>Obligatory attribute Name: Name of the phase. Two phases cannot have the same name.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="Mob" type="Mob_t">
+										<xs:annotation>
+											<xs:documentation>Optional attribute Mob: Mobility of the phase. It can be: 
+											- Liq: The phase pertains to the group of phases that move as a liquid. 
+											- Gas: The phase pertains to the group of phases that moves as a gas. 
+											- Imm: The phase pertains to the group of phases that do not move. 
+											Default Mob is Liq if the phase is named Aqueous, Gas if the phase is named Gas, and Imm otherwise.											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+							<!--Phases-->
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<!--ReactionS-->
+				<xs:element minOccurs="0" maxOccurs="1" name="ReactionS">
+					<xs:annotation>
+						<xs:documentation>Set of Reactions</xs:documentation>
+					</xs:annotation>
+					<xs:complexType mixed="true">
+						<xs:sequence>
+							<!--Reaction-->
+							<xs:element minOccurs="0" maxOccurs="unbounded" name="Reaction">
+								<xs:annotation>
+									<xs:documentation>A chemical reaction is the process by which some species (reactants) are consumed to yield other species (products).
+									It obligatorily (if Kin="Yes") or optionally (if Kin="No") contains one RateLaw									</xs:documentation>
+								</xs:annotation>
+								<xs:complexType mixed="true">
+									<xs:sequence minOccurs="0">
+										<!--RateLaw-->
+										<xs:element minOccurs="0" maxOccurs="1" name="RateLaw">
+											<xs:annotation>
+												<xs:documentation>A rate law specifies the rate of a reaction (in mol/s/m3_medium) as a function of the chemical composition. Optionally contains one or more Term.</xs:documentation>
+											</xs:annotation>
+											<xs:complexType mixed="true">
+												<xs:sequence>
+													<!--Factor-->
+													<xs:element minOccurs="0" maxOccurs="unbounded" name="Fact">
+														<xs:annotation>
+															<xs:documentation>Factor in the Monod rate law.</xs:documentation>
+														</xs:annotation>
+														<xs:complexType mixed="true">
+															<xs:attribute name="Type" type="Fact_t" use="required">
+																<xs:annotation>
+																	<xs:documentation>Obligatory attribute Type: It can be:
+																	- Lin: The factor is linear with the concentration of a species. 
+																	- Cat: The factor considers a catalyzing species (c/(κ+c)). 
+																	- Inh: The factor considers an inhibiting species (κ/(κ+c)).																	</xs:documentation>
+																</xs:annotation>
+															</xs:attribute>
+															<xs:attribute name="Species" type="xs:string" use="required">
+																<xs:annotation>
+																	<xs:documentation>Obligatory attribute Species: Name of catalyzing species. It must have been specified in Species.</xs:documentation>
+																</xs:annotation>
+															</xs:attribute>
+															<xs:attribute name="Kappa" type="xs:float">
+																<xs:annotation>
+																	<xs:documentation>Obligatory (if Type = "Cat" or "Inh") attribute Kappa: Half saturation or inhibition constant (κ). Note that its unit is defined by the phase of the catalyzing or inhibiting species (e.g., mol/kg if the species pertains to the aqueous phase, see Table 1).</xs:documentation>
+																</xs:annotation>
+															</xs:attribute>
+														</xs:complexType>
+													</xs:element>
+													<!--Term-->
+													<xs:element minOccurs="0" maxOccurs="unbounded" name="Term">
+														<xs:annotation>
+															<xs:documentation>Term in the Lasaga rate law.</xs:documentation>
+														</xs:annotation>
+														<xs:complexType mixed="true">
+															<xs:sequence minOccurs="0">
+																<!--Catal-->
+																<xs:element maxOccurs="unbounded" name="Catal">
+																	<xs:annotation>
+																		<xs:documentation>Catalyser or inhibitor</xs:documentation>
+																	</xs:annotation>
+																	<xs:complexType mixed="true">
+																		<xs:attribute name="Species" type="xs:string" use="required">
+																			<xs:annotation>
+																				<xs:documentation>Obligatory attribute Species: Name of catalyzing species. It must have been specified in Species.</xs:documentation>
+																			</xs:annotation>
+																		</xs:attribute>
+																		<xs:attribute name="Order" type="xs:decimal" use="required">
+																			<xs:annotation>
+																				<xs:documentation>Obligatory attribute Order: Order of the catalyzer (n).</xs:documentation>
+																			</xs:annotation>
+																		</xs:attribute>
+																	</xs:complexType>
+																</xs:element>
+																<!--Term-->
+															</xs:sequence>
+															<xs:attribute name="Const" type="xs:float" use="required">
+																<xs:annotation>
+																	<xs:documentation>Obligatory attribute Const: Kinetic rate constant (λ).</xs:documentation>
+																</xs:annotation>
+															</xs:attribute>
+															<xs:attribute name="Eact" type="xs:float">
+																<xs:annotation>
+																	<xs:documentation>Optional attribute Eact: Activation energy (Ea, J Mol−1). Default is 0.0.</xs:documentation>
+																</xs:annotation>
+															</xs:attribute>
+															<xs:attribute name="ParInt" type="xs:decimal" default="1.0">
+																<xs:annotation>
+																	<xs:documentation>Optional attribute ParInt: Internal rate law term parameter (p). Default is 1.0.</xs:documentation>
+																</xs:annotation>
+															</xs:attribute>
+															<xs:attribute name="ParExt" type="xs:decimal" default="1.0">
+																<xs:annotation>
+																	<xs:documentation>Optional attribute ParExt: Exteral rate law term parameter (q). Default is 1.0.</xs:documentation>
+																</xs:annotation>
+															</xs:attribute>
+														</xs:complexType>
+													</xs:element>
+													<!--RateLaw-->
+												</xs:sequence>
+												<xs:attribute name="Type" type="RateLaw_t" use="required">
+													<xs:annotation>
+														<xs:documentation>Obligatory attribute: Type: Type of rate law. It can be "Lasaga" or "Monod".</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="Phase" type="string80" use="required">
+													<xs:annotation>
+														<xs:documentation>Obligatory attribute Phase: Name of the (mineral) phase (α) for volume fraction (θ) and specific surface (σ). It must have been specified in PhaseS.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="Thresh" type="xs:float" default="1.0">
+													<xs:annotation>
+														<xs:documentation>Only for Lasaga ratelaw. Optional attribute Thresh: Threshold Ω (Ωthr, logΩ is the saturation index). Default is 1.0.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="GeomConst" type="xs:float">
+													<xs:annotation>
+														<xs:documentation>Only for Lasaga ratelaw. Obligatory attribute GeomConst: Granular geometry constant (g).</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="GeomExp" type="xs:float" default="0.66667">
+													<xs:annotation>
+														<xs:documentation>Only for Lasaga ratelaw. Optional attribute GeomExp: Granular geometry exponent (h). Default is 2/3.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="VolF0" type="xs:float" default="0.0">
+													<xs:annotation>
+														<xs:documentation>Only for Lasaga ratelaw. Optional attribute VolF0: Minimum volume fraction (θ_α0). Default is 0.0.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="Const" type="xs:float" default="0.0">
+													<xs:annotation>
+														<xs:documentation>Only for Monod ratelaw. Obligatory attribute Const: Kinetic rate constant (λ).</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+											</xs:complexType>
+										</xs:element>
+										<!--Reaction-->
+									</xs:sequence>
+									<xs:attribute name="Name" type="string80">
+										<xs:annotation>
+											<xs:documentation>Optional attribute Name: Name of the reaction. Default is a number, which coincides with the order of appearance in the file.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="Form" type="string80" use="required">
+										<xs:annotation>
+											<xs:documentation>Obligatory attribute Form: Text containing the formula of the reaction. It contains "=" "+", "-", stoichiometric coefficients and names of species. The "=" separates reactants (to its left) from products (to its right). If no "=" is used, all are products. If no stoichiometric coefficients are used, a value of 1.0 is assumed. Stoichiometric coefficients of species with the same name are summed. Species must be followed by one or more spaces. All species must have been specified in Species (see 3.2.1.1.2).</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="LogK" type="xs:float">
+										<xs:annotation>
+											<xs:documentation>Optional attribute LogK: Log equilibrium constant of the reaction. Default value is 0.0.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="Kin" type="YesNo_t" default="No">
+										<xs:annotation>
+											<xs:documentation>Optional attribute Kin: It can be:
+											- No: The reaction is assumed to be in equilibrium.
+											- Yes: The reaction is assumed to be kinetic.
+											Default value is "No"											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+							<!--ReactionS-->
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<!--ComponentS-->
+				<xs:element minOccurs="1" maxOccurs="1" name="ComponentS">
+					<xs:annotation>
+						<xs:documentation>Obligatory contains one or more Component (if Method="Manual"). The number of Component must be the number of species minus the number of equilibrium reactions.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType mixed="true">
+						<xs:sequence>
+							<!--Component-->
+							<xs:element minOccurs="0" maxOccurs="unbounded" name="Component">
+								<xs:complexType mixed="true">
+									<xs:attribute name="Name" type="string80">
+										<xs:annotation>
+											<xs:documentation>Optional attribute Name: Name of the component. Default is a number, which coincides with the order of appearance in the file.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="Type" type="Comp_t" default="Het">
+										<xs:annotation>
+											<xs:documentation>Optional attribute Type: It can be:
+											- Het: The component is heterogeneous, that is, it is not homogeneous liquid conservative nor homogeneous immobile.
+											- Holc: The component is homogeneous liquid conservative, that is, it only contains species of liquid phases and it is not involved in kinetics reactions.
+											- Hoi: The component is homogeneous immobile, that is, it only contains species of immobile phases.
+											Default value is "Het".											</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="Form" type="string200" use="required">
+										<xs:annotation>
+											<xs:documentation>Obligatory attribute Form: Text containing the formula of the component. It contains "+", " ", coefficients and names of species. If no coefficients are used, a value of 1.0 is assumed. Species must be followed by one or more spaces. All species must have been specified in Species.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+							<!--ComponentS-->
+						</xs:sequence>
+						<xs:attribute name="Method" type="CompS_t">
+							<xs:annotation>
+								<xs:documentation>Optional attribute Method: It can be:
+								- Manual: The components are given by the user.
+								- Rref: The components are calculated from the stoichiometry of the reactions by using RREF (Reduced Row Echelon Form).
+								Default value is "Manual".								</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<!-- <xs:attribute name="Fict" type="string80"> -->
+						<!-- <xs:annotation> -->
+						<!-- <xs:documentation>Text containing the names of fictitious species separated by semicolons (;).  All species must have been specified in Species. Fictitious species are species with zero or negligible concentrations and therefore the columns of the component matrix referring to these species should be made zero. Typical examples of fictitious species are "e-" in aqueous phases and "X-" in ion exchange phases.</xs:documentation> -->
+						<!-- </xs:annotation> -->
+						<!-- </xs:attribute> -->
+					</xs:complexType>
+				</xs:element>
+				<!--Numerics-->
+				<xs:element minOccurs="0" maxOccurs="1" name="Numerics">
+					<xs:annotation>
+						<xs:documentation>Numerical options and parameters for chemical speciation calculations.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType mixed="true">
+						<xs:attribute name="Method" type="NumMeth_t" default="NR">
+							<xs:annotation>
+								<xs:documentation>Optional attribute Method: It can be:
+								- NR: Newton-Raphson is used for the chemical speciation calculations.
+								Default value is NR.
+								</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="Speciation" type="NumSpec_t">
+							<xs:annotation>
+								<xs:documentation>Optional attribute Speciation: It can be:
+								- FromPrim: Speciation is done by imposing concentrations of primary species (see section 2.5.1. Speciation from concentrations of primary species).
+								- FromComAqu: Speciation is done by imposing the aqueous part of component concentrations (see section 2.5.2. Speciation from aqueous concentrations of components).								</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="Tol" type="NonNegativeFloat" default="1.0e-6">
+							<xs:annotation>
+								<xs:documentation>Optional attribute Tol: Relative tolerance convergence criterion. Default is 1.0e-6.</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="MaxFac" type="NonNegativeFloat" default="1000.0">
+							<xs:annotation>
+								<xs:documentation>Optional attribute MaxFac: Maximum correction factor for each iteration. Concentrations can not change more then a factor of MaxFac. Default is 1000.0.</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="MaxIter" type="xs:nonNegativeInteger" default="20">
+							<xs:annotation>
+								<xs:documentation>Optional attribute Maxiter: Maximum number of iterations. Default is 20.</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="UseLn" type="YesNo_t" default="Yes">
+							<xs:annotation>
+								<xs:documentation>Optional attribute UseLn: 
+								- Yes: The natural logarithm (or ln) of concentrations is used as variable for numerical solution.
+								- No: The concentrations are used as variable for numerical solution.
+								Default value is Yes.								</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="Primaries" type="string80">
+							<xs:annotation>
+								<xs:documentation>Obligatory (if speciation="FromPrim") attribute Primaries: Text containing the names of the primary species separated by semicolons (;). They must have been specified in Species.</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="TimeWeight" type="Float0to1" default="1.0">
+							<xs:annotation>
+								<xs:documentation>Optional attribute TimeWeight (only for Speciation = FromComAqu): Time weighting factor for kinetic terms. Default is 1.0.</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+				<!--Output-->
+				<xs:element minOccurs="0" maxOccurs="1" name="Output">
+					<xs:annotation>
+						<xs:documentation>Output options for writing chemistry to files.
+						Optionally contains a Acti, Conc, Comp, SatI, Rate and VolF.						</xs:documentation>
+					</xs:annotation>
+					<xs:complexType mixed="true">
+						<xs:sequence>
+							<!--Acti-->
+							<xs:element minOccurs="0" maxOccurs="1" name="Acti">
+								<xs:annotation>
+									<xs:documentation>Activities of species</xs:documentation>
+								</xs:annotation>
+								<xs:complexType mixed="true">
+									<xs:attribute name="Species" type="string80">
+										<xs:annotation>
+											<xs:documentation>Optional attribute Species: List of species, of which the −log(activity) or p-value (e.g., pH = −log(activity of H+)) is written. The species in the list must be separated by semicolons (;) and must have been defined in. If there is no attribute species, no activities are written.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+							<!--Conc-->
+							<xs:element minOccurs="0" maxOccurs="1" name="Conc">
+								<xs:annotation>
+									<xs:documentation>Concentrations of species</xs:documentation>
+								</xs:annotation>
+								<xs:complexType mixed="true">
+									<xs:attribute name="Species" type="string80">
+										<xs:annotation>
+											<xs:documentation>Optional attribute Species: List of species, of which the concentration is written. The species in the list must be separated by semicolons (;) and must have been defined in Species. If there is no attribute species, no concentrations are written.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+							<!--Comp-->
+							<xs:element minOccurs="0" maxOccurs="1" name="Comp">
+								<xs:annotation>
+									<xs:documentation>Aqueous, gaseous and immobile concentrations of components</xs:documentation>
+								</xs:annotation>
+								<xs:complexType mixed="true">
+									<xs:attribute name="Components" type="string80">
+										<xs:annotation>
+											<xs:documentation>Optional attribute Components: List of components, of which the aqueous, gaseous and immobile concentration is written. The components in the list must be separated by semicolons (;) and must have been defined in ComponentS. If there is no attribute components, no component concentrations are written.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+							<!--SatI-->
+							<xs:element minOccurs="0" maxOccurs="1" name="SatI">
+								<xs:annotation>
+									<xs:documentation>Saturation indices (Si = Ω) of reactions</xs:documentation>
+								</xs:annotation>
+								<xs:complexType mixed="true">
+									<xs:attribute name="Reactions" type="string80">
+										<xs:annotation>
+											<xs:documentation>Optional attribute Reactions: List of reactions, of which the saturations index is written. The saturation index =Slog⁡a-log⁡k, which equals 0 if the reaction is in equilibrium according to equation (4). The reactions in the list must be separated by semicolons (;) and must have been defined in ReactionS. If there is no attribute reactions, no saturation indices are written.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+							<!--Rate-->
+							<xs:element minOccurs="0" maxOccurs="1" name="Rate">
+								<xs:annotation>
+									<xs:documentation>Reaction rates of reactions</xs:documentation>
+								</xs:annotation>
+								<xs:complexType mixed="true">
+									<xs:attribute name="Reactions" type="string80">
+										<xs:annotation>
+											<xs:documentation>Optional attribute Reactions: List of reactions, of which the rate is written. The reactions in the list must be separated by semicolons (;) and must have been defined in ReactionS. If there is no attribute reactions, no rates are written.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+							<!--VolF-->
+							<xs:element minOccurs="0" maxOccurs="1" name="VolF">
+								<xs:annotation>
+									<xs:documentation>Volume fractions of phases</xs:documentation>
+								</xs:annotation>
+								<xs:complexType mixed="true">
+									<xs:attribute name="Phases" type="string80">
+										<xs:annotation>
+											<xs:documentation>Optional attribute Phases: List of phases, of which the volume fraction (m3 of phase/m3 of porous medium) is written. The phases in the list must be separated by semicolons (;) and must have been defined in PhaseS. If there is no attribute Phases, no volume fractions are written.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+							<!--Output-->
+						</xs:sequence>
+						<xs:attribute name="File" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Optional attribute File: It is the name of the output file. Default is the root of the filename of the chemical system to which chem.txt has been added.</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="FileTime" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Optional attribute FileTime: It is the name of the output file for results of (some) local chemistries versus time. Default is the root of the filename of the chemical system to which ChemT.txt has been added.</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+				<!--ChemSys-->
+			</xs:sequence>
+			<xs:attribute name="Name" type="string80" default="Chemical system">
+				<xs:annotation>
+					<xs:documentation>Optional attribute Name: Name of the Chemical system. Default name is 'Chemical system'.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="PhreeqcFile" type="string80" default=" ">
+				<xs:annotation>
+					<xs:documentation>Optional attribute PhreeqcFile: Name of an output file of Phreeqc. If it is empty (that is, PhreeqcFile = " "), only the present xml file is used to read the chemical system. If a filename is given, only names of phases and species are read. Other attributes of phases and species are read from the Phreeqc database file, written in PhreeqcFile (indicated by "Database file:"). Reactions in the xml file are ignored. Instead, reactions are read from the Phreeqc database file and are all assumed to be in equilibrium. Components are always read from the xml file. The default PhreeqcFile is " " (that is, Phreeqc output is not used).</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<!-- LocalChemS -->
+	<xs:element name="LocalChemS">
+		<xs:annotation>
+			<xs:documentation>Optionally contains one or more LocalChem.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType mixed="true">
+			<xs:sequence>
+				<!-- LocaChem -->
+				<xs:element name="LocalChem" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Local chemistries contain the chemical composition necessary for, e.g., initial and boundary conditions.
+						Optionally contains chemical compositions of one or more Phase. Default means default concentrations for phase and species of the phase.						</xs:documentation>
+					</xs:annotation>
+					<xs:complexType mixed="true">
+						<xs:sequence>
+							<!-- Phase -->
+							<xs:element name="Phase" minOccurs="0" maxOccurs="unbounded">
+								<xs:complexType mixed="true">
+									<xs:sequence>
+										<!-- Species -->
+										<xs:element name="Species" minOccurs="0" maxOccurs="unbounded">
+											<xs:complexType mixed="true">
+												<xs:attribute name="Name" type="string80" use="required">
+													<xs:annotation>
+														<xs:documentation>Obligatory attribute Name: Name of the species. It must have been defined in the chemical system.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+												<xs:attribute name="Conc" type="PositiveFloat">
+													<xs:annotation>
+														<xs:documentation>Optional attribute Conc: Concentration of the species. The definition of concentration depends on the type of phase (see 3.2.1.1.1. Phase Model). If the phase is of the type Aqueous or Aqueous_DH, it is the molality (mol of species / kg of water). If the phase is of the type gas, it is the partial pressure (bar). If the phase is of the type mineral, it is the molar fraction (mol of species / mol of phase). If the phase is of the type exchange, it is the equivalent fraction (eq of species / eq of cation exchange capacity). Default is 1.0E−20.</xs:documentation>
+													</xs:annotation>
+												</xs:attribute>
+											</xs:complexType>
+										</xs:element>
+										<!-- Phase -->
+									</xs:sequence>
+									<xs:attribute name="Name" type="string80" use="required">
+										<xs:annotation>
+											<xs:documentation>Obligatory attribute Name: Name of the phase. It must have been defined in the chemical system.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="VolF" type="NonNegativeFloat">
+										<xs:annotation>
+											<xs:documentation>Optional attribute VolF: If the phase is of the type Exchange (see 3.2.1.1.1. Phase Model), it is the cation exchange capacity (eq (m−3 of medium)). Otherwise it is the volume (fraction) of the phase (m3 of phase (m−3 of medium)). Default is 0.0.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="Pres" type="xs:float" default="1.0">
+										<xs:annotation>
+											<xs:documentation>Optional attribute Pres: Pressure of the phase. Default is 1.0 bar.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+							<!-- LocaChem -->
+						</xs:sequence>
+						<xs:attribute name="Name" type="string80" use="required">
+							<xs:annotation>
+								<xs:documentation>Optional attribute Name: Name of the local chemistry. Default name is a number.</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="Temp" type="xs:float" default="25.0">
+							<xs:annotation>
+								<xs:documentation>Optional attribute Temp: Temperature (0C). Default is 25 0C.</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+				<!-- LocalChemS -->
+			</xs:sequence>
+			<xs:attribute name="PhreeqcFile" type="string80" default=" ">
+				<xs:annotation>
+					<xs:documentation>Optional attribute PhreeqcFile: Name of an output file of Phreeqc. If it is empty (that is, PhreeqcFile = " "), only the present xml file is used to read the local chemistries. If a filename is given, only names of local chemistries are read. Other attributes (concentrations, phase volume fractions and temperature) are read from the Phreeqc output file. Names of local chemistries in the xml file must coincide with names in the Phreeqc output file. The latter must be contained in lines of the Phreeqc output file starting with "Initial solution" or "Reaction step". It may be necessary to add manually (through a text editor) proper names to the Phreeqc output file. The default PhreeqcFile is " " (that is, Phreeqc output is not used).</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<!-- CheProfReadWrite -->
+	<xs:element name="CheProfReadWrite">
+		<xs:annotation>
+			<xs:documentation>The code CheProfReadWrite just reads xml files for a chemical system and local chemistries (see chapter 3.2. Basic CheProf input) and writes them again in xml format. This can be useful when one wants to convert a case calculated by, e.g., Phreeqc, into xml files through the PhreeqcFile attribute in the chemical system (see 3.2.1. Chemical System) and/or local chemistries (see 3.2.2. Local chemistry). The output files contain the full chemical system and/or local chemistries with information obtained from Phreeqc. This information can be checked, adjusted and/or extended for subsequent use by other codes.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType mixed="true">
+			<xs:attribute name="FileChemSysIn" type="string80" use="required">
+				<xs:annotation>
+					<xs:documentation>Obligatory attribute FileChemSysIn: Name of the input file for the chemical system.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="FileChemSysOut" type="string80">
+				<xs:annotation>
+					<xs:documentation>Optional attribute FileChemSysOut: Name of the output file for the chemical system. If it is empty (that is, FileChemSysOut = " "), no output file is written. The default is " ".</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="FileLocalChemIn" type="string80">
+				<xs:annotation>
+					<xs:documentation>Optional attribute FileLocalChemIn: Name of the input file for the local chemistries. If it is empty (that is, FileLocalChemIn = " "), no local chemistries are read. The default is " ".</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="FileLocalChemOut" type="string80">
+				<xs:annotation>
+					<xs:documentation>Optional attribute FileLocalChemOut: Name of the output file for the local chemistries. If it is empty (that is, FileLocalChemOut = " "), no output file is written. The default is " ".</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<!-- ChemMix -->
+	<xs:element name="ChemMix">
+		<xs:annotation>
+			<xs:documentation>The code ChemMix calculates the chemical composition of the mixing of two end members (local chemistries) with various mixing ratios.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType mixed="true">
+			<xs:attribute name="FileChemSys" type="string80" use="required">
+				<xs:annotation>
+					<xs:documentation>Obligatory attribute FileChemSys: Name of the input file for the chemical system.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="FileLocalChem" type="string80" use="required">
+				<xs:annotation>
+					<xs:documentation>Obligatory attribute FileLocalChem: Name of the input file for the local chemistries.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="IniChem" type="string80" use="required">
+				<xs:annotation>
+					<xs:documentation>Obligatory attribute IniChem: Name of the local chemistry that represents the initial condition of the mixing.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="EndM1" type="string80" use="required">
+				<xs:annotation>
+					<xs:documentation>Obligatory attribute EndM1: Name of the local chemistry that represents the first end member.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="EndM2" type="string80" use="required">
+				<xs:annotation>
+					<xs:documentation>Obligatory attribute EndM1: Name of the local chemistry that represents the second end member.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="nMix" type="xs:positiveInteger" use="required">
+				<xs:annotation>
+					<xs:documentation>Obligatory attribute nMix: Number of mixing ratios.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<!-- WMA1D -->
+	<xs:element name="WMA1D">
+		<xs:annotation>
+			<xs:documentation>The code WMA1D uses the Water Mixing Approach of Soler-Sagarra et al. (2022) to solve reactive transport in a simple one-dimensional domain with uniform flow of water.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType mixed="true">
+			<xs:attribute name="Flux" type="PositiveFloat" use="required">
+				<xs:annotation>
+					<xs:documentation>Obligatory attribute Flux: Darcy flux (m/s), q</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="Por" type="Float0to1" default="1.0">
+				<xs:annotation>
+					<xs:documentation>Optional attribute Por: Porosity, ϕ. Default value is 1.0.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="PeInv" type="NonNegativeFloat" default="0.0">
+				<xs:annotation>
+					<xs:documentation>Optional attribute PeInv: Inverse Peclet number, P_e^(-1). Default value is 0.0.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="Length" type="PositiveFloat" default="1.0">
+				<xs:annotation>
+					<xs:documentation>Optional attribute Length: Length of the domain (m), L. Default value is 1.0.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="TotTime" type="PositiveFloat">
+				<xs:annotation>
+					<xs:documentation>Optional attribute TotTime: Total time to be simulated (s). Default value is Lϕ/q.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="NOutputTime" type="xs:positiveInteger" default="5">
+				<xs:annotation>
+					<xs:documentation>Optional attribute NOutputTime: Number of times that results are written. Default value is 5.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="FileChemSys" type="string80" use="required">
+				<xs:annotation>
+					<xs:documentation>Obligatory attribute FileChemSys: Name of the input file for the chemical system.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="FileLocalChem" type="string80" use="required">
+				<xs:annotation>
+					<xs:documentation>Obligatory attribute FileLocalChem: Name of the input file for the local chemistries.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="ChemIni" type="string80" use="required">
+				<xs:annotation>
+					<xs:documentation>Obligatory attribute ChemIni: Name of the local chemistry that represents the initial condition.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="ChemBou" type="string80" use="required">
+				<xs:annotation>
+					<xs:documentation>Obligatory attribute ChemBou: Name of the local chemistry that represents chemistry of the inlet water.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="NCell" type="xs:positiveInteger" use="required">
+				<xs:annotation>
+					<xs:documentation>Obligatory attribute NCell: Number of cells.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<!-- DSA1D -->
+	<xs:element name="DSA1D">
+		<xs:annotation>
+			<xs:documentation>The code DSA1D calculates reactive transport in a one-dimensional domain discretized by finite elements. Transport include advection, diffusion and dispersion in only the liquid phase. Liquid flow is assumed uniform in space, but it may vary in time.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType mixed="true">
+			<xs:sequence>
+				<!-- ZoneS -->
+				<xs:element minOccurs="1" maxOccurs="1" name="ZoneS">
+					<xs:annotation>
+						<xs:documentation>A set of Zones.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType mixed="true">
+						<xs:sequence>
+							<!-- Zone -->
+							<xs:element minOccurs="1" maxOccurs="unbounded" name="Zone">
+								<xs:annotation>
+									<xs:documentation>The domain is divided into one or more zones, each zone having equal element size, diffusion coefficient, dispersivity and initial chemistry.</xs:documentation>
+								</xs:annotation>
+								<xs:complexType mixed="true">
+									<xs:attribute name="Name" type="xs:string">
+										<xs:annotation>
+											<xs:documentation>Optional attribute Name: Name of the zone. Default is a number, which coincides with the order of appearance in the file.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="Length" type="PositiveFloat" use="required">
+										<xs:annotation>
+											<xs:documentation>Obligatory attribute Length: Length of the zone (m).</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="nElem" type="xs:positiveInteger">
+										<xs:annotation>
+											<xs:documentation>Optional attribute nElem: Number of elements of the zone. Default is 1.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="Dif" type="NonNegativeFloat">
+										<xs:annotation>
+											<xs:documentation>Optional attribute Dif: Diffusion coefficient (m2/s) of the zone. Default is 0.0.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="Dis" type="NonNegativeFloat">
+										<xs:annotation>
+											<xs:documentation>Optional attribute Dis: Dispersivity (m) of the zone. Default is 0.0.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="ChemIni" type="xs:string" use="required">
+										<xs:annotation>
+											<xs:documentation>Obligatory attribute ChemIni: Name of the local chemistry that represents the initial condition.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<!-- PeriodS -->
+				<xs:element minOccurs="1" maxOccurs="1" name="PeriodS">
+					<xs:complexType>
+						<xs:sequence>
+							<!-- Period -->
+							<xs:element name="Period" maxOccurs="unbounded" minOccurs="1">
+								<xs:annotation>
+									<xs:documentation>Total time is divided into one or more periods, each period having equal time step, flow rate and boundary conditions.</xs:documentation>
+								</xs:annotation>
+								<xs:complexType mixed="true">
+									<xs:attribute name="Name" type="xs:string">
+										<xs:annotation>
+											<xs:documentation>Optional attribute Name: Name of the period. Default is a number, which coincides with the order of appearance in the file.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="Time" type="PositiveFloat" use="required">
+										<xs:annotation>
+											<xs:documentation>Obligatory attribute Time: Time length of the period (s).</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="dTime" type="PositiveFloat">
+										<xs:annotation>
+											<xs:documentation>Optional attribute dTime: Time increment (s). Default is Time.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="Flux" type="xs:float">
+										<xs:annotation>
+											<xs:documentation>Optional attribute Flux: Darcy flux (m/s), q. Positive means flow from left to right, negative flow from right to left. Default is 0.0.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="CoefLeft" type="xs:float">
+										<xs:annotation>
+											<xs:documentation>Optional attribute CoefLeft: Boundary coefficient (m/s) at the left boundary. Default is 0.0.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="CoefRight" type="xs:float">
+										<xs:annotation>
+											<xs:documentation>Optional attribute CoefRight: Boundary coefficient (m/s) at the left boundary. Default is 0.0.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="ChemLeft" type="xs:string">
+										<xs:annotation>
+											<xs:documentation>Obligatory (if Flux > 0 or CoefLeft > 0) attribute ChemLeft: Name of the local chemistry that represents chemistry of the left boundary.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="ChemRight" type="xs:string">
+										<xs:annotation>
+											<xs:documentation>Obligatory (if Flux > 0 or CoefLeft > 0) attribute ChemRight: Name of the local chemistry that represents chemistry of the left boundary.</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<!-- Numerics -->
+				<xs:element minOccurs="0" maxOccurs="1" name="Numerics">
+					<xs:annotation>
+						<xs:documentation>Numerical options and parameters for reactive transport calculations.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:attribute name="TimeWeight" type="Float0to1">
+							<xs:annotation>
+								<xs:documentation>Optional attribute TimeWeight: Interpolation time scheme for transport terms (0.0: explicit scheme, 1.0: implicit scheme, 0.5: Crank-Nicolson scheme). Default is 1.0</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="TolVar" type="NonNegativeFloat">
+							<xs:annotation>
+								<xs:documentation>Optional attribute TolVar: Maximum relative error tolerance on variable (concentration of primary species or component). Default is 1.0e-6.</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="TolBal" type="NonNegativeFloat">
+							<xs:annotation>
+								<xs:documentation>Optional attribute TolBal: Maximum error tolerance on mass balance (mol/m3 of medium). Default is 0.0.</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="MaxIter" type="xs:nonNegativeInteger">
+							<xs:annotation>
+								<xs:documentation>Optional attribute MaxIter: Maximum number of iterations. MaxIter must be equal or larger than OptIter. Default is 20.</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="OptIter" type="xs:nonNegativeInteger">
+							<xs:annotation>
+								<xs:documentation>Optional attribute OptIter: Optimum number of iterations. Default is 4.</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute type="string80" name="FileChemSys" use="required">
+				<xs:annotation>
+					<xs:documentation>Obligatory attribute FileChemSys: Name of the input file for the chemical system.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute type="string80" name="FileLocalChem" use="required">
+				<xs:annotation>
+					<xs:documentation>Obligatory attribute FileLocalChem: Name of the input file for the local chemistries.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

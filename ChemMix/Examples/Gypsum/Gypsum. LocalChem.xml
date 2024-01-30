@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<LocalChemS>
+ 
+   <LocalChem Name="EndM1">
+      <Phase Name="Aqueous" VolF="0.2">
+         <Species Name="Ca+2" Conc="1.00e-1"/>
+         <Species Name="SO4-2" Conc="2.51e-4"/>
+	  </Phase>
+      <Phase Name="Gypsum" VolF="0.1">
+         <Species Name="Gypsum" Conc="1.0"/>
+	  </Phase>
+   </LocalChem>
+   
+   <LocalChem Name="EndM2">
+      <Phase Name="Aqueous" VolF="0.2">
+         <Species Name="Ca+2" Conc="5.00e-4"/>
+         <Species Name="SO4-2" Conc="5.02e-2"/>
+	  </Phase>
+      <Phase Name="Gypsum" VolF="0.1">
+         <Species Name="Gypsum" Conc="1.0"/>
+	  </Phase>
+   </LocalChem>
+	
+</LocalChemS>

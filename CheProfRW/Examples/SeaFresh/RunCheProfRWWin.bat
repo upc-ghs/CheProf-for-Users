@@ -1,0 +1,2 @@
+"..\..\Executables\CheprofRWWin.exe"
+pause
