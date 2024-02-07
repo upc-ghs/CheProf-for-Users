@@ -11,5 +11,3 @@ Input for codes is done with xml input files. These files can best be viewed and
 
 More information and a detailed input file description can be found in the documentation of the main folder "CheProf_for_Users".
 
-
-kkkkkkk
