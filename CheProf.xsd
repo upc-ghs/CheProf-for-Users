@@ -87,6 +87,7 @@
 			<xs:enumeration value="FromPrim"/>
 			<xs:enumeration value="FromComAqu"/>
 			<xs:enumeration value="FromComAquKin"/>
+			<xs:enumeration value="FromComAquImm"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<!-- ChemSys -->
@@ -128,7 +129,7 @@
 														<xs:documentation>Optional attribute Type: Type of phase model. It can be: 
 														- Aqueous: Concentrations are molality (mol/kg water). Ideal activities. Activity of water is 1.0. The constraint of the phase is that the molality of water = (MolMass of water)−1. 
 														- Aqueous_DH: Same as Aqueous, but activities are calculated with Debye Hückel (equation (5)).
-														- Gas: Concentrations are partial pressure (bar). Ideal activities. The constraint of the phase is that the sum of partial pressures equals the gas pressure/PresRef.
+														- Gas: Concentrations are partial pressure (bar). Ideal activities. The constraint of the phase is that the sum of partial pressures equals the gas pressure.
 														- Mineral: Concentrations are molar fraction. Ideal activities. The constraint of the phase is a complementarity function: Min((1 − Sum of mol fractions),VolF) = 0.
 														- Mineral_Ubiq: Same as Mineral, but the mineral is assumed ubiquitous. The constraint of the phase is: 1 − Sum of mol fractions = 0. This type must be used for minerals that precipitate or dissolve kinetically.
 														- Exchange: Concentrations are equivalent fraction. Ideal activities. The constraint of the phase is that the sum of equivalent fraction equals 1.0.
@@ -143,11 +144,6 @@
 												<xs:attribute name="Water" type="string80">
 													<xs:annotation>
 														<xs:documentation>Optional attribute Water (only for Type = Aqueous or Aqueous_DH): Name of the species that represents water. Default is H2O, if H2O is given in the set of species, and none if H2O is not given in the set of species.</xs:documentation>
-													</xs:annotation>
-												</xs:attribute>
-												<xs:attribute name="PresRef" type="xs:float" default="1.0">
-													<xs:annotation>
-														<xs:documentation>Optional attribute PresRef: Only for Type = gas. Reference pressure (bar). Default is 1.0 bar.</xs:documentation>
 													</xs:annotation>
 												</xs:attribute>
 												<xs:attribute name="MolVol" type="PositiveFloat">
@@ -452,8 +448,12 @@
 						<xs:attribute name="Speciation" type="NumSpec_t">
 							<xs:annotation>
 								<xs:documentation>Optional attribute Speciation: It can be:
-								- FromPrim: Speciation is done by imposing concentrations of primary species (see section 2.5.1. Speciation from concentrations of primary species).
-								- FromComAqu: Speciation is done by imposing the aqueous part of component concentrations (see section 2.5.2. Speciation from aqueous concentrations of components).								</xs:documentation>
+								- FromPrim: Speciation is done by imposing concentrations of primary species (see section 2.5.1). Speciation from concentrations of primary species).
+								- FromComAqu: Speciation is done by imposing the aqueous part of component concentrations (see section 2.5.2). Speciation from aqueous concentrations of components).
+								- FromComAquKin: Speciation is done by imposing the aqueous part of component concentrations plus kinetic terms (see section 2.5.3).
+								- FromComAquImm: Speciation is done by imposing the aqueous plus immobile part of component concentrations (see section 2.5.4).
+								Default value is "FromComAqu".
+								</xs:documentation>
 							</xs:annotation>
 						</xs:attribute>
 						<xs:attribute name="Tol" type="NonNegativeFloat" default="1.0e-6">

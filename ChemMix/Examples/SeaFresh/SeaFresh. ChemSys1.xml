@@ -26,7 +26,7 @@
          <Species Name="CaSO4" MolMass="0.1361406" Charge="0.0" IonSize="3.0" b_TJ="0.100"/>
       </Phase>
       <Phase Name="Gas" Mob="Gas">
-         <PhaseModel Type="Gas" PresRef="0.10000E+01"/>
+         <PhaseModel Type="Gas"/>
          <Species Name="CO2(g)" MolMass="0.0440095" Charge="0.0"/>
       </Phase>
       <Phase Name="Calcite" Mob="Imm">
