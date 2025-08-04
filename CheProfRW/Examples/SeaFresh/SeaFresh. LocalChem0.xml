@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<LocalChemS PhreeqcFile="SeaFresh.pqo">
-   <LocalChem Name="Seawater Calcite"/>
-   <LocalChem Name="Fresh water"/>
-</LocalChems>

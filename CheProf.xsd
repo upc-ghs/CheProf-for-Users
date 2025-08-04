@@ -468,7 +468,12 @@
 						</xs:attribute>
 						<xs:attribute name="MaxIter" type="xs:nonNegativeInteger" default="20">
 							<xs:annotation>
-								<xs:documentation>Optional attribute Maxiter: Maximum number of iterations. Default is 20.</xs:documentation>
+								<xs:documentation>Optional attribute MaxIter: Maximum number of iterations. Default is 20.</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="MaxDiverg" type="xs:nonNegativeInteger" default="20">
+							<xs:annotation>
+								<xs:documentation>Optional attribute MaxDiverg: Maximum number of diverging iterations. Default is MaxIter.</xs:documentation>
 							</xs:annotation>
 						</xs:attribute>
 						<xs:attribute name="UseLn" type="YesNo_t" default="Yes">
