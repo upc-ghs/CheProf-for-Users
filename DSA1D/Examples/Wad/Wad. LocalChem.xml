@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<LocalChemS>
+ 
+   <LocalChem Name="EndSea" Temp="25.00000">
+      <Phase Name="Aqueous" VolF="0.30000E+00">
+         <Species Name="H+" Conc="0.10670E-07"/>
+         <Species Name="Na+" Conc="0.47890E+00"/>
+         <Species Name="HCO3-" Conc="0.35180E-03"/>
+         <Species Name="Mg+2" Conc="0.47420E-01"/>
+         <Species Name="Ca+2" Conc="0.94950E-02"/>
+         <Species Name="Cl-" Conc="0.56600E+00"/>
+         <Species Name="OH-" Conc="0.20060E-05"/>
+         <Species Name="CO3-2" Conc="0.65450E-05"/>
+         <Species Name="CO2" Conc="0.38130E-05"/>
+      </Phase>
+      <Phase Name="X" VolF="0.20000E+02">
+         <Species Name="NaX" Conc="0.70600E+00"/>
+         <Species Name="CaX2" Conc="0.63670E-01"/>
+         <Species Name="MgX2" Conc="0.23040E+00"/>
+      </Phase>
+   </LocalChem>
+ 
+   <LocalChem Name="EndFresh" Temp="25.00000">
+      <Phase Name="Aqueous" VolF="0.10030E-02">
+         <Species Name="H+" Conc="0.54020E-07"/>
+         <Species Name="Na+" Conc="0.99840E-07"/>
+         <Species Name="HCO3-" Conc="0.32230E-02"/>
+         <Species Name="Mg+2" Conc="0.97050E-07"/>
+         <Species Name="Ca+2" Conc="0.15910E-02"/>
+         <Species Name="Cl-" Conc="0.20000E-06"/>
+         <Species Name="OH-" Conc="0.21620E-06"/>
+         <Species Name="CO3-2" Conc="0.37240E-05"/>
+         <Species Name="CO2" Conc="0.33990E-03"/>
+      </Phase>
+      <Phase Name="X" VolF="0.10000E-09">
+         <Species Name="NaX" Conc="0.10710E-05"/>
+         <Species Name="CaX2" Conc="0.10000E+01"/>
+         <Species Name="MgX2" Conc="0.38620E-04"/>
+      </Phase>
+   </LocalChem>
+ 
+</LocalChemS>

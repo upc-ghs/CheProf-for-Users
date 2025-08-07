@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<ChemSys Name="Chemical system">
+ 
+   <PhaseS>
+      <Phase Name="Aqueous" Mob="Liq">
+         <PhaseModel Type="Aqueous_DH" Dens="1000.00000"/>
+         <Species Name="H+" MolMass="0.0010079" Charge="1.0" IonSize="9.0" b_TJ="0.000"/>
+         <Species Name="Na+" MolMass="0.0229897" Charge="1.0" IonSize="4.1" b_TJ="0.082"/>
+         <Species Name="HCO3-" MolMass="0.0610168" Charge="-1.0" IonSize="5.4" b_TJ="0.000"/>
+         <Species Name="Mg+2" MolMass="0.0243050" Charge="2.0" IonSize="5.5" b_TJ="0.200"/>
+         <Species Name="Ca+2" MolMass="0.0400780" Charge="2.0" IonSize="5.0" b_TJ="0.165"/>
+         <Species Name="Cl-" MolMass="0.0354530" Charge="-1.0" IonSize="3.6" b_TJ="0.017"/>
+         <Species Name="OH-" MolMass="0.0170073" Charge="-1.0" IonSize="3.5" b_TJ="0.000"/>
+         <Species Name="CO3-2" MolMass="0.0600089" Charge="-2.0" IonSize="5.4" b_TJ="0.000"/>
+         <Species Name="CO2" MolMass="0.0440095" Charge="0.0" IonSize="3.0" b_TJ="0.100"/>
+      </Phase>
+      <Phase Name="X" Mob="Imm">
+         <PhaseModel Type="Exchange"/>
+         <Species Name="NaX" MolMass="0.0229897" Charge="1.0"/>
+         <Species Name="CaX2" MolMass="0.0400780" Charge="2.0"/>
+         <Species Name="MgX2" MolMass="0.0243050" Charge="2.0"/>
+      </Phase>
+   </PhaseS>
+ 
+   <ReactionS>
+      <Reaction Name="OH- formation" Form="= H+ + OH-" LogK="-13.995" Kin="No"/>
+      <Reaction Name="HCO3- formation" Form="H+ + CO3-2 = HCO3-" LogK="10.329" Kin="No"/>
+      <Reaction Name="CO2 formation" Form="2H+ + CO3-2 = CO2" LogK="16.681" Kin="No"/>
+      <Reaction Name="CaX2 exchange" Form="Ca+2 + 2NaX = 2Na+ + CaX2" LogK="0.800" Kin="No"/>
+      <Reaction Name="MgX2 exchange" Form="Mg+2 + 2NaX = 2Na+ + MgX2" LogK="0.600" Kin="No"/>
+   </ReactionS>
+ 
+   <ComponentS Method="Manual">
+      <Component Name="Mg" Type="Het" Form="Mg+2 + MgX2"/>
+      <Component Name="Ca" Type="Het" Form="Ca+2 + CaX2"/>
+      <Component Name="H+" Type="HolC" Form="H+ - OH- - CO3-2 + CO2"/>
+      <Component Name="Na+2Mg+2Ca" Type="HolC" Form="Na+ + 2Mg+2 + 2Ca+2"/>
+      <Component Name="C" Type="HolC" Form="HCO3- + CO3-2 + CO2"/>
+      <Component Name="Cl" Type="HolC" Form="Cl-"/>
+      <Component Name="CEC" Type="Hoi" Form="NaX + 2CaX2 + 2MgX2"/>
+   </ComponentS>
+ 
+   <Numerics Method="NR" Speciation="FromComAqu" Tol="0.10E-06" MaxIter="100" MaxFac="0.10E+04" UseLn="Yes" TimeWeight="1.00"/>
+ 
+   <Output File="Wad. Chem.txt" FileTime="Wad. ChemT.txt">
+      <Acti Species="H+"/>
+      <Conc Species="Cl-; Na+; Mg+2; Ca+2; NaX; MgX2; CaX2"/>
+   </Output>
+ 
+</ChemSys>

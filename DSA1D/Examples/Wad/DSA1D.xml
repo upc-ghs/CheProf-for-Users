@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<DSA1D FileChemSys="Wad. ChemSys.xml" FileLocalChem="Wad. LocalChem.xml">
+	<ZoneS>
+		<Zone Length="2.0" nElem="20" Dis="0.1" ChemIni="EndSea"/>
+	</ZoneS>
+	<PeriodS>
+		<Period Time="4.73e+10" dTime="4.73E+08" Flux="4.75647E-10" ChemLeft="EndFresh"/>
+	</PeriodS>
+	<Output Nodes="21"/>
+</DSA1D>

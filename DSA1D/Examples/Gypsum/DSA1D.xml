@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<DSA1D FileChemSys="Gypsum. ChemSys.xml" FileLocalChem="Gypsum. LocalChem.xml">
+	<ZoneS>
+		<Zone Length="100" nElem="20" Dis="10.0" ChemIni="EndM1"/>
+	</ZoneS>
+	<PeriodS>
+		<Period Time="7.584e7" dTime="3.16e6" Flux="6.342e-8" ChemLeft="EndM2"/>
+		<Period Time="3.16e6" dTime="3.16e6" Flux="6.342e-8" ChemLeft="EndM2"/>
+		<Period Time="7.584e7" dTime="3.16e6" Flux="6.342e-8" ChemLeft="EndM2"/>
+		<Period Time="3.16e6" dTime="3.16e6" Flux="6.342e-8" ChemLeft="EndM2"/>
+	</PeriodS>
+</DSA1D>
